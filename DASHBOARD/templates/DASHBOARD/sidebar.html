@@ -1,0 +1,94 @@
+{% load static %}
+<!DOCTYPE html>
+<html>
+  <head>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@3.3.0/dist/tailwind.min.css" rel="stylesheet" />
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css" />
+  </head>
+  <body>
+    {% block content %}
+    <!-- Sidebar - Fixed Position -->
+    <div class="fixed left-0 top-0 z-40 w-72">
+      <div class="bg-gray-900 text-gray-100 h-screen">
+        <div class="flex flex-col h-full">
+          <!-- Sidebar Header -->
+          <div class="px-6 py-8 mt-10">
+            <a href='{% url "home" %}' class="text-2xl font-bold bg-gradient-to-r mt-10 from-blue-400 to-purple-500 bg-clip-text text-transparent">Finance Dashboard</a>
+          </div>
+
+          <!-- Navigation -->
+          <nav class="flex-1 px-4 space-y-6">
+            <!-- Main Dashboard -->
+            <div>
+              <a href="{% url 'home' %}" class="flex items-center px-4 py-3 text-gray-100 rounded-lg transition-all duration-200 hover:bg-gray-800/50 hover:scale-[1.02] active:scale-[0.98] group">
+                <i class="bi bi-speedometer2 text-blue-400 mr-3 text-xl group-hover:rotate-12 transition-transform"></i>
+                <span class="font-medium">Dashboard</span>
+              </a>
+            </div>
+
+            <!-- Accounts Section -->
+            <div class="space-y-2">
+              <div class="px-4 text-xs font-semibold tracking-wider text-gray-400/80 uppercase">Accounts</div>
+              <div class="space-y-1">
+                <a href="{% url 'add_new_account' %}" class="flex items-center px-4 py-2.5 text-gray-300 rounded-lg transition-all duration-200 hover:bg-gray-800/50 hover:text-gray-100 group">
+                  <i class="bi bi-plus-circle text-green-400/90 mr-3 text-lg group-hover:scale-110 transition-transform"></i>
+                  <span>Add New Account</span>
+                </a>
+                <a href="{% url 'account_list' %}" class="flex items-center px-4 py-2.5 text-gray-300 rounded-lg transition-all duration-200 hover:bg-gray-800/50 hover:text-gray-100 group">
+                  <i class="bi bi-list-ul text-purple-400/90 mr-3 text-lg group-hover:translate-x-1 transition-transform"></i>
+                  <span>Account List</span>
+                </a>
+              </div>
+            </div>
+
+            <!-- Income Section -->
+            <div class="space-y-2">
+              <div class="px-4 text-xs font-semibold tracking-wider text-gray-400/80 uppercase">Income</div>
+              <div class="space-y-1">
+                <a href="{% url 'add-income-record' %}" class="flex items-center px-4 py-2.5 text-gray-300 rounded-lg transition-all duration-200 hover:bg-gray-800/50 hover:text-gray-100 group">
+                  <i class="bi bi-wallet2 text-emerald-400/90 mr-3 text-lg group-hover:scale-110 transition-transform"></i>
+                  <span>Add Income</span>
+                </a>
+                <a href="{% url 'income-category-list' %}" class="flex items-center px-4 py-2.5 text-gray-300 rounded-lg transition-all duration-200 hover:bg-gray-800/50 hover:text-gray-100 group">
+                  <i class="bi bi-tag text-teal-400/90 mr-3 text-lg group-hover:rotate-12 transition-transform"></i>
+                  <span>Income Categories</span>
+                </a>
+              </div>
+            </div>
+
+            <!-- Expense Section -->
+            <div class="space-y-2">
+              <div class="px-4 text-xs font-semibold tracking-wider text-gray-400/80 uppercase">Expense</div>
+              <div class="space-y-1">
+                <a href="{% url 'add-expanse-record' %}" class="flex items-center px-4 py-2.5 text-gray-300 rounded-lg transition-all duration-200 hover:bg-gray-800/50 hover:text-gray-100 group">
+                  <i class="bi bi-credit-card text-pink-400/90 mr-3 text-lg group-hover:scale-110 transition-transform"></i>
+                  <span>Add Expense</span>
+                </a>
+                <a href="{% url 'expanse-category-list' %}" class="flex items-center px-4 py-2.5 text-gray-300 rounded-lg transition-all duration-200 hover:bg-gray-800/50 hover:text-gray-100 group">
+                  <i class="bi bi-tag text-rose-400/90 mr-3 text-lg group-hover:rotate-12 transition-transform"></i>
+                  <span>Expense Categories</span>
+                </a>
+              </div>
+            </div>
+
+            <!-- History Section -->
+            <div class="space-y-2">
+              <a href="{% url 'expense-record-list' %}" class="flex items-center px-4 py-2.5 text-gray-300 rounded-lg transition-all duration-200 hover:bg-gray-800/50 hover:text-gray-100 group">
+                <i class="bi bi-book-fill text-amber-400/90 mr-3 text-lg group-hover:translate-x-1 transition-transform"></i>
+                <span>Expense History</span>
+              </a>
+            </div>
+          </nav>
+        </div>
+      </div>
+    </div>
+
+    <!-- Main Content Container -->
+    <div class="ml-72 min-h-screen p-8">
+      {% block main_content %}
+      <!-- Your main content goes here -->
+      {% endblock %}
+    </div>
+    {% endblock %}
+  </body>
+</html>

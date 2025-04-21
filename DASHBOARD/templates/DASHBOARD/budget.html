@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Budget Goal</title>
+    <style>
+        .progress-circle {
+            width: 150px;
+            height: 150px;
+            border-radius: 50%;
+            background: conic-gradient(#4e8ef7 {{ budget.percentage_used }}%, #e0e0e0 {{ budget.percentage_used }}%);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin: auto;
+        }
+        .progress-circle span {
+            font-size: 18px;
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+    <h1>Budget Goal</h1>
+    <div class="progress-circle">
+        <span>{{ budget.percentage_used|floatformat:0 }}%</span>
+    </div>
+    <p>Budget Used: ${{ budget.budget_used }}</p>
+    <p>Budget Goal: ${{ budget.budget_goal }}</p>
+    <form method="post">
+        {% csrf_token %}
+        {{ form.as_p }}
+        <button type="submit">Update Budget</button>
+    </form>
+</body>
+</html>

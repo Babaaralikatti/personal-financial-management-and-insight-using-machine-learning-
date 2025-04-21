@@ -1,0 +1,42 @@
+{% extends "DASHBOARD/baseTemp.html" %}
+{% load static %}
+{% load crispy_forms_tags %}
+{{ form.media }}
+{% block content %}
+<div class="min-h-screen bg-gray-50">
+
+    <!-- Main Container -->
+    <div class="flex flex-col md:flex-row">
+
+        <!-- Sidebar Section -->
+        <div class="w-full md:w-64 md:min-h-screen bg-white shadow-sm">
+            {% include "DASHBOARD/sidebar.html" %}
+        </div>
+
+        <!-- Main Content Section -->
+        <div class="flex-1 p-8 bg-gray-50">
+
+            <!-- Form Container -->
+            <div class="bg-white shadow-md rounded-lg p-8 max-w-4xl mx-auto">
+
+                <h2 class="text-3xl font-semibold text-gray-900 mb-6 text-center">Create New Category</h2>
+                
+                <!-- Form -->
+                <form action="" method="post" class="space-y-6">
+
+                    {% csrf_token %}
+                    {{ form | crispy }}
+                    
+                    <!-- Submit Button -->
+                    <div class="flex justify-center">
+                        <button type="submit" class="bg-green-600 text-white py-2 px-6 rounded-md shadow-md hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-green-600 transition duration-200 ease-in-out">
+                            Submit
+                        </button>
+                    </div>
+                </form>
+            </div>
+
+        </div>
+    </div>
+</div>
+{% endblock %}

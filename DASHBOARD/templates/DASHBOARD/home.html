@@ -1,0 +1,394 @@
+{% extends 'DASHBOARD/baseTemp.html' %}
+{% load static %}
+{% load humanize %}
+
+{% block content %}
+<div class="min-h-screen bg-gray-50 flex">
+    <!-- Sidebar -->
+    {% include 'DASHBOARD/sidebar.html' %}
+
+    
+        <!-- Main Content Area -->
+    <div class="flex-1 p-6 lg:p-8">
+        <!-- Page Header -->
+        
+
+        <!-- Stats Cards Grid -->
+        <section class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+            <!-- Balance Card -->
+            <div
+                class="bg-white rounded-xl shadow-lg border border-slate-200 overflow-hidden group hover:shadow-xl transition-all duration-300 hover:scale-105">
+                <div class="p-6 bg-gradient-to-r from-indigo-500 to-indigo-600 rounded-t-xl">
+                    <div class="flex items-center justify-between">
+                        <div class="text-white">
+                            <p class="text-sm font-medium opacity-80">Remaining Balance</p>
+                            <h3 class="text-3xl font-semibold mt-2">
+                                <span class="currency-value" data-value="{{ remaining_balance }}"></span>
+                            </h3>
+                        </div>
+                        <div class="bg-indigo-400/30 p-3 rounded-full">
+                            <i class="fa fa-wallet text-white text-2xl"></i>
+                        </div>
+                    </div>
+                </div>
+                <div class="px-6 py-3 bg-indigo-50/50 border-t border-indigo-100">
+                    <p class="text-sm text-indigo-600">Available funds</p>
+                </div>
+            </div>
+
+            <!-- Expense Card -->
+            <div
+                class="bg-white rounded-xl shadow-lg border border-slate-200 overflow-hidden group hover:shadow-xl transition-all duration-300 hover:scale-105">
+                <div class="p-6 bg-gradient-to-r from-rose-500 to-rose-600 rounded-t-xl">
+                    <div class="flex items-center justify-between">
+                        <div class="text-white">
+                            <p class="text-sm font-medium opacity-80">Total Expense</p>
+                            <h3 class="text-3xl font-semibold mt-2">
+                                <span class="currency-value" data-value="{{ expense_data }}"></span>
+                            </h3>
+                        </div>
+                        <div class="bg-rose-400/30 p-3 rounded-full">
+                            <i class="fa fa-wallet text-white text-2xl"></i>
+                        </div>
+                    </div>
+                </div>
+                <div class="px-6 py-3 bg-rose-50/50 border-t border-rose-100">
+                    <p class="text-sm text-rose-600">Total spending</p>
+                </div>
+            </div>
+
+            <!-- Income Card -->
+            <div
+                class="bg-white rounded-xl shadow-lg border border-slate-200 overflow-hidden group hover:shadow-xl transition-all duration-300 hover:scale-105">
+                <div class="p-6 bg-gradient-to-r from-emerald-500 to-emerald-600 rounded-t-xl">
+                    <div class="flex items-center justify-between">
+                        <div class="text-white">
+                            <p class="text-sm font-medium opacity-80">Total Income</p>
+                            <h3 class="text-3xl font-semibold mt-2">
+                                <span class="currency-value" data-value="{{ income_data }}"></span>
+                            </h3>
+                        </div>
+                        <div class="bg-emerald-400/30 p-3 rounded-full">
+                            <i class="fa fa-wallet text-white text-2xl"></i>
+                        </div>
+                    </div>
+                </div>
+                <div class="px-6 py-3 bg-emerald-50/50 border-t border-emerald-100">
+                    <p class="text-sm text-emerald-600">Total earnings</p>
+                </div>
+            </div>
+
+            <!-- Net Worth Card -->
+            <div
+                class="bg-white rounded-xl shadow-lg border border-slate-200 overflow-hidden group hover:shadow-xl transition-all duration-300 hover:scale-105">
+                <div class="p-6 bg-gradient-to-r from-amber-500 to-amber-600 rounded-t-xl">
+                    <div class="flex items-center justify-between">
+                        <div class="text-white">
+                            <p class="text-sm font-medium opacity-80">Net Worth</p>
+                            <h3 class="text-3xl font-semibold mt-2">
+                                <span class="currency-value" data-value="{{ net_worth }}"></span>
+                            </h3>
+                        </div>
+                        <div class="bg-amber-400/30 p-3 rounded-full">
+                            <i class="fa fa-wallet text-white text-2xl"></i>
+                        </div>
+                    </div>
+                </div>
+                <div class="px-6 py-3 bg-amber-50/50 border-t border-amber-100">
+                    <p class="text-sm text-amber-600">Total assets</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Main Content Grid -->
+        <div class="grid lg:grid-cols-3 gap-6">
+            <!-- Transactions Section -->
+            <section class="lg:col-span-2 bg-white rounded-2xl shadow-lg hover:shadow-xl transition-all duration-300 hover:scale-105 border border-slate-200 p-6">
+                <div class="flex items-center justify-between mb-6">
+                    <h2 class="text-xl font-semibold text-slate-800">Recent Transactions</h2>
+                    <a href="{% url "expense-record-list" %}" class="text-sm text-indigo-600 hover:text-indigo-800 font-medium transition-colors">
+                        View All Transactions
+                    </a>
+                </div>
+
+                <!-- Transaction Table -->
+                <div class="overflow-x-auto">
+                    <table class="w-full text-sm text-slate-600">
+                        <thead>
+                            <tr class="border-b border-slate-200">
+                                <th class="py-3 px-4 text-left font-semibold">Date</th>
+                                <th class="py-3 px-4 text-left font-semibold">Category</th>
+                                <th class="py-3 px-4 text-left font-semibold">Amount</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for item in transaction_summary %}
+                            <tr class="border-b border-slate-100 hover:bg-slate-50 transition-colors">
+                                <td class="py-3 px-4">{{ item.Date }}</td>
+                                <td class="py-3 px-4">{{ item.Category }}</td>
+                                <td class="py-3 px-4">{{ item.Amount }}</td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+
+                <!-- Pagination -->
+                <div class="mt-4 flex items-center justify-between">
+                    <div class="text-sm text-slate-600 space-x-2">
+                        {% if transaction_summary.has_previous %}
+                            <a href="?page=1" class="text-indigo-600 hover:text-indigo-800 font-medium">First</a>
+                            <a href="?page={{ transaction_summary.previous_page_number }}" class="text-indigo-600 hover:text-indigo-800 font-medium">Previous</a>
+                        {% endif %}
+                        <span class="mx-4">
+                            Page {{ transaction_summary.number }} of {{ transaction_summary.paginator.num_pages }}
+                        </span>
+                        {% if transaction_summary.has_next %}
+                            <a href="?page={{ transaction_summary.next_page_number }}" class="text-indigo-600 hover:text-indigo-800 font-medium">Next</a>
+                            <a href="?page={{ transaction_summary.paginator.num_pages }}" class="text-indigo-600 hover:text-indigo-800 font-medium">Last</a>
+                        {% endif %}
+                    </div>
+                </div>
+            </section>
+
+            <!-- Budget & Predictions Section -->
+            <section class="bg-white rounded-2xl shadow-lg hover:shadow-xl transition-all duration-300 hover:scale-105 border border-slate-200 p-6 space-y-6">
+                <!-- Budget Goal Container -->
+                <div class="max-w-md mx-auto bg-white rounded-lg shadow-lg p-6">
+                    <div class="flex items-center justify-between mb-6">
+                        <h2 class="text-xl font-semibold text-slate-800">Budget Goal</h2>
+                    </div>
+                    
+                    <!-- Circular Progress -->
+                    <div class="flex flex-col items-center">
+                        <div class="relative w-36 h-36">
+                            <svg class="w-full h-full" viewBox="0 0 100 100">
+                                <!-- Background Circle -->
+                                <circle cx="50" cy="50" r="45" fill="none" stroke="#E5E7EB" stroke-width="10" />
+                                <!-- Progress Circle -->
+                                <circle id="budget-progress" cx="50" cy="50" r="45" fill="none" 
+                                        stroke="#6366F1" stroke-width="10" stroke-linecap="round" 
+                                        transform="rotate(-90 50 50)" stroke-dasharray="282.6" 
+                                        stroke-dashoffset="282.6"></circle>
+                            </svg>
+                            <!-- Text in the Center of the Circle -->
+                            <div class="absolute inset-0 flex flex-col items-center justify-center">
+                                <span id="budget-percent" class="text-2xl font-bold text-indigo-600">0%</span>
+                                <span class="text-sm text-slate-500">of goal</span>
+                            </div>
+                        </div>
+                        
+                        <!-- Budget Details -->
+                        <div class="mt-4 text-center">
+                            <p class="text-sm text-slate-600">Budget Used: <span id="budget-used">₹400</span></p>
+                            <p class="text-sm text-slate-600">Budget Goal: <span id="budget-goal">₹1000</span></p>
+                        </div>
+                    </div>
+                </div>
+            
+                <!-- JavaScript for Progress Circle -->
+                <script>
+                    
+                </script>
+                
+
+
+                <!-- Predictions & Recommendations -->
+                <div class="grid grid-cols-1 gap-4">
+                    <!-- Savings Prediction -->
+                    <div class="bg-gradient-to-br from-indigo-50 to-indigo-100 rounded-xl shadow-md hover:shadow-xl transition-all duration-300 hover:scale-105 border border-indigo-100 p-5 transition-all duration-300 hover:shadow-lg">
+                        <div class="flex items-center justify-between mb-4">
+                            <h3 class="text-base font-semibold text-indigo-900 flex items-center">
+                                <svg class="w-5 h-5 mr-2 text-indigo-600" fill="currentColor" viewBox="0 0 24 24">
+                                    <path d="M12 2L2 7l10 5 10-5-10-5zm0 20l-10-5 2.05-1.025L12 17l7.95-3.975L22 12l-10 5z"/>
+                                    <path d="M12 2v20l10-5V7l-10 5V2z" opacity=".3"/>
+                                </svg>
+                                Savings Prediction
+                            </h3>
+                            <button 
+                                onclick="speakSavings()"
+                                class="text-indigo-600 hover:text-indigo-800 transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-indigo-300 rounded-full p-2"
+                                aria-label="Listen to savings prediction"
+                            >
+                                <svg class="w-6 h-6" fill="currentColor" viewBox="0 0 24 24">
+                                    <path d="M16 11c0 2.209-1.791 4-4 4s-4-1.791-4-4v-4c0-2.209 1.791-4 4-4s4 1.791 4 4v4zm-6 0c0 1.657 1.343 3 3 3s3-1.343 3-3v-4c0-1.657-1.343-3-3-3s-3 1.343-3 3v4zm5 3v2c0 2.761-2.239 5-5 5s-5-2.239-5-5v-2h2v2c0 1.657 1.343 3 3 3s3-1.343 3-3v-2h2z"/>
+                                </svg>
+                            </button>
+                        </div>
+                    
+                        <div id="savings-text" class="space-y-2">
+                            {% if predicted_savings %}
+                            <div class="flex items-center space-x-2">
+                                <svg class="w-6 h-6 text-indigo-600" fill="currentColor" viewBox="0 0 24 24">
+                                    <path d="M11 21h2v-3h2a3 3 0 003-3v-3a3 3 0 00-3-3h-4V5h4v2h2V5a2 2 0 00-2-2H9a2 2 0 00-2 2v4H5a2 2 0 00-2 2v3a2 2 0 002 2h4v3h2zm-2-5v-3h6v3z"/>
+                                </svg>
+                                <p class="text-base text-indigo-800 font-medium">
+                                    Estimated Savings Next Month
+                                </p>
+                            </div>
+                            <p class="text-2xl font-bold text-indigo-700 pl-8">
+                                ₹ {{ predicted_savings|floatformat:2 }}
+                            </p>
+                            {% else %}
+                            <div class="flex items-center space-x-2 text-indigo-500 italic">
+                                <svg class="w-6 h-6" fill="currentColor" viewBox="0 0 24 24">
+                                    <path d="M12 2L2 7l10 5 10-5-10-5zm0 20l-10-5 2.05-1.025L12 17l7.95-3.975L22 12l-10 5z"/>
+                                    <path d="M12 2v20l10-5V7l-10 5V2z" opacity=".3"/>
+                                </svg>
+                                <p>Prediction not available</p>
+                            </div>
+                            {% endif %}
+                        </div>
+                    </div>
+                    
+                    <script>
+                    function speakSavings() {
+                        const savingsElement = document.getElementById("savings-text");
+                        const utterance = new SpeechSynthesisUtterance();
+                    
+                        if (savingsElement.querySelector('.font-bold')) {
+                            const savingsText = savingsElement.querySelector('.font-bold').textContent;
+                            utterance.text = `Your estimated savings for next month is ${savingsText}`;
+                        } else {
+                            utterance.text = "Sorry, savings prediction is not available at the moment.";
+                        }
+                    
+                        utterance.lang = "en-IN";
+                        utterance.rate = 0.9; // Slightly slower speech for clarity
+                        speechSynthesis.speak(utterance);
+                    }
+                    </script>
+
+                    <!-- AI Recommendations -->
+                    <div class="bg-gradient-to-br from-emerald-50 to-emerald-100 rounded-xl shadow-md hover:shadow-xl transition-all duration-300 hover:scale-105 border border-emerald-100 p-5 transition-all duration-300 hover:shadow-lg">
+                        <div class="flex items-center justify-between mb-4">
+                            <h3 class="text-base font-semibold text-emerald-900 flex items-center">
+                                <svg class="w-5 h-5 mr-2 text-emerald-600" fill="currentColor" viewBox="0 0 24 24">
+                                    <path d="M11.25 11.25l.041-.02a.75.75 0 011.828.416c0 1.259-.753 1.99-1.742 1.99-.742 0-1.32-.494-1.402-1.315L10 11.5H9a.75.75 0 010-1.5h1v-1a.75.75 0 011.5 0v1h1a.75.75 0 010 1.5h-1.25zM12 2.25c-5.385 0-9.75 4.365-9.75 9.75s4.365 9.75 9.75 9.75 9.75-4.365 9.75-9.75S17.385 2.25 12 2.25zm-1.5 12.75a1.5 1.5 0 103 0 1.5 1.5 0 00-3 0z" />
+                                </svg>
+                                Smart Recommendations
+                            </h3>
+                            <button 
+                                onclick="speakRecommendations()"
+                                class="text-emerald-600 hover:text-emerald-800 transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-emerald-300 rounded-full p-2"
+                                aria-label="Listen to recommendations"
+                            >
+                                <svg class="w-6 h-6" fill="currentColor" viewBox="0 0 24 24">
+                                    <path d="M16 11c0 2.209-1.791 4-4 4s-4-1.791-4-4v-4c0-2.209 1.791-4 4-4s4 1.791 4 4v4zm-6 0c0 1.657 1.343 3 3 3s3-1.343 3-3v-4c0-1.657-1.343-3-3-3s-3 1.343-3 3v4zm5 3v2c0 2.761-2.239 5-5 5s-5-2.239-5-5v-2h2v2c0 1.657 1.343 3 3 3s3-1.343 3-3v-2h2z"/>
+                                </svg>
+                            </button>
+                        </div>
+                    
+                        <ul id="recommendation-list" class="space-y-3">
+                            {% for recommendation in recommendations %}
+                            <li class="flex items-start group">
+                                <svg class="w-5 h-5 mr-3 mt-0.5 text-emerald-500 flex-shrink-0 group-hover:text-emerald-600 transition-colors duration-200" fill="currentColor" viewBox="0 0 20 20">
+                                    <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd" />
+                                </svg>
+                                <span class="text-emerald-700 group-hover:text-emerald-900 transition-colors duration-200">
+                                    {{ recommendation }}
+                                </span>
+                            </li>
+                            {% empty %}
+                            <li class="text-slate-500 italic flex items-center">
+                                <svg class="w-5 h-5 mr-2 text-slate-400" fill="currentColor" viewBox="0 0 20 20">
+                                    <path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z" clip-rule="evenodd" />
+                                </svg>
+                                No recommendations available
+                            </li>
+                            {% endfor %}
+                        </ul>
+                    </div>
+                    
+                    <script>
+                    function speakRecommendations() {
+                        const recommendations = document.querySelectorAll("#recommendation-list li");
+                        
+                        if (recommendations.length === 0) {
+                            const utterance = new SpeechSynthesisUtterance("Sorry, no recommendations available.");
+                            speechSynthesis.speak(utterance);
+                            return;
+                        }
+                    
+                        const utterance = new SpeechSynthesisUtterance();
+                        let text = "Here are your smart recommendations: ";
+                        
+                        recommendations.forEach((item, index) => {
+                            // Skip the "No recommendations" default text
+                            if (!item.classList.contains('italic')) {
+                                text += `Recommendation ${index + 1}: ${item.textContent.trim()}. `;
+                            }
+                        });
+                    
+                        utterance.text = text;
+                        utterance.lang = "en-IN";
+                        utterance.rate = 0.9; // Slightly slower speech for clarity
+                        speechSynthesis.speak(utterance);
+                    }
+                    </script>
+                </div>
+            </section>
+        </div>
+
+        <!-- Financial Analytics -->
+        <section class="bg-white rounded-2xl shadow-lg border border-slate-200 p-6">
+            <h2 class="text-2xl font-semibold text-slate-800 mb-6">Financial Analytics</h2>
+            {% include 'DASHBOARD/charts.html' %}
+        </section>
+    </main>
+</div>
+
+<script>
+    document.addEventListener("DOMContentLoaded", () => {
+        const used = 400;
+        const goal = 1000;
+        const percentage = Math.min((used / goal) * 100, 100);
+
+        // Update text
+        document.getElementById("budget-percent").textContent = `${Math.round(percentage)}%`;
+        document.getElementById("budget-used").textContent = `$${used}`;
+        document.getElementById("budget-goal").textContent = `$${goal}`;
+
+        // Update circular progress
+        const circle = document.getElementById("budget-progress");
+        const radius = 45;
+        const circumference = 2 * Math.PI * radius;
+        circle.style.strokeDasharray = `${circumference}`;
+        circle.style.strokeDashoffset = `${circumference - (percentage / 100) * circumference}`;
+    });
+</script>
+
+<!-- Currency Formatting Script -->
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        function formatCurrency(amount) {
+            const value = parseFloat(amount).toFixed(2);
+            const [whole, decimal] = value.toString().split('.');
+            const withCommas = whole.replace(/\B(?=(\d{3})+(?!\d))/g, ',');
+            return `₹ ${withCommas}.${decimal}`;
+        }
+
+        document.querySelectorAll('.currency-value').forEach((element) => {
+            const value = element.getAttribute('data-value');
+            element.textContent = formatCurrency(value);
+        });
+    });
+</script>
+<script>
+document.addEventListener("DOMContentLoaded", function () {
+    const used = parseFloat(document.getElementById('budget-used').textContent.replace('₹', '').trim());
+    const goal = parseFloat(document.getElementById('budget-goal').textContent.replace('₹', '').trim());
+    const percent = goal > 0 ? Math.min((used / goal) * 100, 100) : 0;
+
+    const progressCircle = document.getElementById('budget-progress');
+    const progressPercent = document.getElementById('budget-percent');
+    
+    const circumference = 2 * Math.PI * 45; // Circle circumference, r = 45
+    const offset = circumference - (percent / 100) * circumference;
+
+    // Update circle offset and percentage
+    progressCircle.style.strokeDashoffset = offset;
+    progressPercent.textContent = `${Math.round(percent)}%`;
+});
+
+{% endblock %}

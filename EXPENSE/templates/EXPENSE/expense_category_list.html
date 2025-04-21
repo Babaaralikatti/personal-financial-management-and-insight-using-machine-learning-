@@ -1,0 +1,61 @@
+{% extends "DASHBOARD/baseTemp.html" %}
+{% load static %}
+{% block content %}
+<div class="min-h-screen flex justify-center items-center bg-gray-50 py-10">
+
+    <!-- Main Container -->
+    <div class="flex flex-col md:flex-row w-full md:w-3/4 bg-white shadow-lg rounded-lg">
+
+        <!-- Sidebar Section -->
+        <div class="w-full md:w-64 bg-white shadow-md rounded-lg p-6">
+            {% include "DASHBOARD/sidebar.html" %}
+        </div>
+
+        <!-- Main Content Section -->
+        <div class="flex-1 p-8 bg-gray-50">
+
+            <!-- Heading Section -->
+            <div class="mb-8 text-center">
+                <h2 class="text-4xl font-semibold text-gray-900">Expense Categories</h2>
+                <p class="text-gray-600 mt-2">Manage and organize your categories effortlessly.</p>
+            </div>
+
+            <!-- Add New Category Button -->
+            <div class="mb-6">
+                <a href="{% url 'add-expanse-category' %}" class="inline-flex items-center bg-blue-600 text-white py-2 px-6 rounded-md shadow-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-600 transition duration-200 ease-in-out">
+                    <span class="mr-2">Add New Category</span>
+                    <i class="bi bi-plus-circle text-lg"></i>
+                </a>
+            </div>
+
+            <!-- Table Section -->
+            <div class="overflow-x-auto bg-white shadow-md rounded-lg">
+                <table class="min-w-full table-auto border-collapse">
+                    <thead class="bg-blue-100">
+                        <tr class="text-left text-sm text-gray-700">
+                            <th class="px-6 py-3 font-medium">Category</th>
+                            <th class="px-6 py-3 font-medium">Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody class="text-gray-600">
+                        {% for category in object_list %}
+                            <tr class="border-t hover:bg-gray-50 transition">
+                                <td class="px-6 py-3 text-sm">{{ category.category }}</td>
+                                <td class="px-6 py-3 text-sm">
+                                    <a href="{% url 'update-expanse-category' category.id %}" class="text-yellow-500 hover:text-yellow-600 transition duration-200 ease-in-out">
+                                        <i class="bi bi-pencil-square text-xl"></i>
+                                    </a>
+                                </td>
+                            </tr>
+                        {% empty %}
+                            <tr>
+                                <td colspan="2" class="text-center py-3 text-gray-500 text-sm">No categories added yet. Please add a category.</td>
+                            </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

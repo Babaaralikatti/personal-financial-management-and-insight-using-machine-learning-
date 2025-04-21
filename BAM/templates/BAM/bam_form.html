@@ -1,0 +1,39 @@
+{% extends "DASHBOARD/baseTemp.html" %}
+{% load static %}
+{% load crispy_forms_tags %}
+{{ form.media }}
+
+{% block content %}
+<div class="min-h-screen bg-gray-50 flex flex-col md:flex-row">
+  
+  <!-- Sidebar Section -->
+  <div class="w-full md:w-64 md:min-h-screen bg-white shadow-lg border-r border-gray-200">
+    {% include "DASHBOARD/sidebar.html" %}
+  </div>
+
+  <!-- Main Content Area -->
+  <div class="flex-1 p-8">
+    <div class="max-w-4xl mx-auto bg-white p-8 rounded-xl shadow-md border border-gray-200">
+      
+      <!-- Form Header -->
+      <h2 class="text-2xl font-semibold text-gray-800 mb-6 text-center">
+        Add Record
+      </h2>
+
+      <!-- Form Section -->
+      <form action="" method="post" class="space-y-6">
+        {% csrf_token %}
+        {{ form | crispy }}
+        
+        <!-- Submit Button -->
+        <div class="flex justify-center">
+          <button type="submit" class="bg-green-500 text-white py-3 px-6 rounded-lg shadow-md hover:bg-green-600 
+                  transition-transform transform hover:scale-105 focus:outline-none focus:ring-2 focus:ring-green-300">
+            Submit
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+{% endblock %}

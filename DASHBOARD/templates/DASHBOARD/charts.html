@@ -1,0 +1,321 @@
+{% load static %}
+<!-- Tailwind CSS -->
+<link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet" />
+{% block content %}
+  <!-- Charts Section -->
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+  <div class="container mx-auto p-6 space-y-8">
+    <!-- Dashboard Grid -->
+    <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+      <!-- Expense Breakdown Card -->
+      <div class="bg-white rounded-2xl shadow-lg overflow-hidden transition-transform hover:scale-[1.02] duration-300">
+        <div class="p-6">
+          <h3 class="text-2xl font-bold text-gray-800 mb-2">Expense Breakdown</h3>
+          <p class="text-gray-500 text-sm mb-6">Category-wise distribution of expenses</p>
+          <div class="h-[400px]">
+            <canvas id="barChart"></canvas>
+          </div>
+        </div>
+      </div>
+      <!-- Expense Breakdown Card -->
+       
+      <!-- Financial Overview Card -->
+      <div class="bg-white rounded-2xl shadow-lg overflow-hidden transition-transform hover:scale-[1.02] duration-300">
+        <div class="p-6">
+          <h3 class="text-2xl font-bold text-gray-800 mb-2">Financial Overview</h3>
+          <p class="text-gray-500 text-sm mb-6">Deposits vs Expenses timeline</p>
+          <div class="h-[400px]">
+            <canvas id="lineChart"></canvas>
+          </div>
+        </div>
+      </div>
+      <!-- Financial Overview Card -->
+
+      <!-- Weekly Expense Card -->
+      <div class="bg-white rounded-2xl shadow-lg overflow-hidden transition-transform hover:scale-[1.02] duration-300">
+        <div class="p-6">
+          <h3 class="text-2xl font-bold text-gray-800 mb-2">Weekly Expenses</h3>
+          <p class="text-gray-500 text-sm mb-6">Daily expense tracking for the current week</p>
+          <div class="h-[400px]">
+            <canvas id="weeklyExpenseChart"></canvas>
+          </div>
+        </div>
+      </div>
+      <!-- Weekly Expense Card -->
+    </div>
+  </div>
+  <!-- Dashboard Grid -->
+
+  <!--Chart Sections-->
+  <script>
+
+    //Expense Breakdown Chart
+  document.addEventListener('DOMContentLoaded', function () {
+    const categoryLabels = {{ category_labels|safe }};
+    const categoryValues = {{ category_values|safe }};
+    const months = {{ months|safe }};
+    const incomes = {{ incomes|safe }};
+    const expenses = {{ expenses|safe }};
+
+    // Modern color palette
+    const colors = {
+      primary: ['#6366F1', '#8B5CF6', '#EC4899', '#14B8A6', '#F59E0B', '#6366F1'],
+      deposit: '#10B981',
+      expense: '#EF4444'
+    };
+
+    // Formatter function for adding ₹ symbol
+    const formatCurrency = (value) => {
+      return '₹' + value.toLocaleString('en-US');
+    };
+
+    // Bar Chart with modern styling
+    new Chart(document.getElementById('barChart'), {
+      type: 'bar',
+      data: {
+        labels: categoryLabels,
+        datasets: [{
+          data: categoryValues,
+          backgroundColor: colors.primary,
+          borderRadius: 8,
+          borderSkipped: false,
+          hoverOffset: 4
+        }]
+      },
+      options: {
+        responsive: true,
+        maintainAspectRatio: false,
+        plugins: {
+          legend: { display: false },
+          tooltip: {
+            backgroundColor: 'rgba(17, 24, 39, 0.95)',
+            padding: 12,
+            bodyFont: {
+              family: 'Inter, system-ui, sans-serif'
+            },
+            cornerRadius: 8,
+            callbacks: {
+              label: function(context) {
+                return formatCurrency(context.parsed.y);
+              }
+            }
+          }
+        },
+        scales: {
+          x: {
+            grid: { display: false },
+            ticks: {
+              font: {
+                family: 'Inter, system-ui, sans-serif',
+                size: 12
+              }
+            }
+          },
+          y: {
+            grid: {
+              color: 'rgba(243, 244, 246, 1)',
+              drawBorder: false
+            },
+            ticks: {
+              font: {
+                family: 'Inter, system-ui, sans-serif',
+                size: 12
+              },
+              callback: function(value) {
+                return formatCurrency(value);
+              }
+            }
+          }
+        }
+      }
+    });
+
+    // Financial Overview Card
+    new Chart(document.getElementById('lineChart'), {
+      type: 'line',
+      data: {
+        labels: months,
+        datasets: [
+          {
+            label: 'Deposits',
+            data: incomes,
+            borderColor: colors.deposit,
+            backgroundColor: colors.deposit,
+            tension: 0.4,
+            borderWidth: 3,
+            pointRadius: 4,
+            pointHoverRadius: 6
+          },
+          {
+            label: 'Expenses',
+            data: expenses,
+            borderColor: colors.expense,
+            backgroundColor: colors.expense,
+            tension: 0.4,
+            borderWidth: 3,
+            pointRadius: 4,
+            pointHoverRadius: 6
+          }
+        ]
+      },
+      options: {
+        responsive: true,
+        maintainAspectRatio: false,
+        plugins: {
+          legend: {
+            position: 'top',
+            align: 'end',
+            labels: {
+              boxWidth: 12,
+              usePointStyle: true,
+              pointStyle: 'circle',
+              padding: 20,
+              font: {
+                family: 'Inter, system-ui, sans-serif',
+                size: 12
+              }
+            }
+          },
+          tooltip: {
+            backgroundColor: 'rgba(17, 24, 39, 0.95)',
+            padding: 12,
+            bodyFont: {
+              family: 'Inter, system-ui, sans-serif'
+            },
+            cornerRadius: 8,
+            callbacks: {
+              label: function(context) {
+                return `${context.dataset.label}: ${formatCurrency(context.parsed.y)}`;
+              }
+            }
+          }
+        },
+        scales: {
+          x: {
+            grid: { display: false },
+            ticks: {
+              font: {
+                family: 'Inter, system-ui, sans-serif',
+                size: 12
+              }
+            }
+          },
+          y: {
+            grid: {
+              color: 'rgba(243, 244, 246, 1)',
+              drawBorder: false
+            },
+            ticks: {
+              font: {
+                family: 'Inter, system-ui, sans-serif',
+                size: 12
+              },
+              callback: function(value) {
+                return formatCurrency(value);
+              }
+            }
+          }
+        }
+      }
+    });
+  });
+
+
+
+  //Weekly Expense Card
+
+  document.addEventListener('DOMContentLoaded', function () {
+  
+  const colors = {
+    weekly: '#8B5CF6', 
+    accent: 'rgba(139, 92, 246, 0.2)' 
+  };
+
+  
+  const formatCurrency = (value) => {
+    return '₹' + value.toLocaleString('en-US');
+  };
+
+ 
+  new Chart(document.getElementById('weeklyExpenseChart'), {
+    type: 'line',
+    data: {
+      labels: ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'],
+      datasets: [{
+        label: 'Daily Expenses',
+        data: [45, 60, 35, 80, 50, 100, 70],
+        borderColor: colors.weekly,
+        backgroundColor: colors.accent,
+        fill: true,
+        tension: 0.4,
+        borderWidth: 3,
+        pointRadius: 4,
+        pointHoverRadius: 6
+      }]
+    },
+    options: {
+      responsive: true,
+      maintainAspectRatio: false,
+      plugins: {
+        legend: {
+          position: 'top',
+          align: 'end',
+          labels: {
+            boxWidth: 12,
+            usePointStyle: true,
+            pointStyle: 'circle',
+            padding: 20,
+            font: {
+              family: 'Inter, system-ui, sans-serif',
+              size: 12
+            }
+          }
+        },
+        tooltip: {
+          backgroundColor: 'rgba(17, 24, 39, 0.95)',
+          padding: 12,
+          bodyFont: {
+            family: 'Inter, system-ui, sans-serif'
+          },
+          cornerRadius: 8,
+          callbacks: {
+            label: function(context) {
+              return `Daily Expense: ${formatCurrency(context.parsed.y)}`;
+            }
+          }
+        }
+      },
+      scales: {
+        x: {
+          grid: { display: false },
+          ticks: {
+            font: {
+              family: 'Inter, system-ui, sans-serif',
+              size: 12
+            }
+          }
+        },
+        y: {
+          grid: {
+            color: 'rgba(243, 244, 246, 1)',
+            drawBorder: false
+          },
+          ticks: {
+            font: {
+              family: 'Inter, system-ui, sans-serif',
+              size: 12
+            },
+            callback: function(value) {
+              return formatCurrency(value);
+            }
+          }
+        }
+      }
+    }
+  });
+});
+  </script>
+  <!--Chart Sections-->
+{% endblock %}
+
